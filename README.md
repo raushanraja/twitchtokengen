@@ -1,24 +1,83 @@
-# actix_api_starter
+# Auther
 
-This is a starter project for building APIs using Rust.
+This project is a Rust-based web server using Actix-web, designed to interact with the Twitch API for OAuth2 authentication and store user tokens in a PostgreSQL database.
 
-## Running the Server
-To run the server, use the following command:
+## Project Structure
+
+```
+.
+├── .env
+├── .github/
+│   └── workflows/
+│       └── rust.yml
+├── .gitignore
+├── apitest/
+│   └── generatetoken.http
+├── Cargo.lock
+├── Cargo.toml
+├── Dockerfile
+├── README.md
+├── src/
+│   ├── api/
+│   │   ├── app_data.rs
+│   │   ├── db/
+│   │   │   ├── client.rs
+│   │   │   └── mod.rs
+│   │   ├── mod.rs
+│   │   └── v1/
+│   │       ├── endpoints/
+│   │       │   └── auth.rs
+│   │       └── mod.rs
+│   ├── config/
+│   │   └── mod.rs
+│   ├── lib.rs
+│   └── main.rs
+└── target/
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Rust (1.83.0 or later)
+- PostgreSQL
+- Docker (optional)
+
+### Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```
+TWITCH_CLIENT_ID=<your_twitch_client_id>
+TWITCH_CLIENT_SECRET=<your_twitch_client_secret>
+TWITCH_REDIRECT_URL=<your_twitch_redirect_url>
+SUPABASE_URL=<your_supabase_url>
+SUPABASE_SECRET_KEY=<your_supabase_secret_key>
+PORT=8080
+```
+
+### Building and Running
+To build and run the project locally:
 
 ```sh
+cargo build
 cargo run
 ```
 
-## Configuration
+### Using Docker
 
-The environment variables can be updated in the `.env` file. These variables are loaded in the `configure` method of the `src/config/mod.rs` file.
+To build and run the project using Docker:
 
-## Endpoints
+```sh
+docker build -t api_starter .
+docker run --env-file .env -p 8080:8080 api_starter
+```
 
-The endpoints are added to the `src/api/v1/endpoints` directory.
+### API Endpoints
 
-## Adding New Endpoints
+- `GET /generatetoken`: Generates a Twitch OAuth2 token URL and stores the CSRF token in a cache.
+- `GET /`: Callback endpoint for Twitch OAuth2, retrieves the user token and stores it in the PostgreSQL database.
 
-After adding a new endpoint, make sure to add new service to the end of `App::new().app_data(server_id).wrap(cors).service(root)` to include the new endpoint.
 
-
+### GitHub Actions
+The project uses GitHub Actions for CI/CD. The workflow is defined in `.github/workflows/rust.yml`.
