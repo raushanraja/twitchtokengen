@@ -1,0 +1,6 @@
+@hostname=localhost
+@port=8000
+
+GET http://{{hostname}}:{{port}}/generatetoken
+Accept: application/json
+
